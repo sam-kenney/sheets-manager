@@ -1,0 +1,2 @@
+export GOOGLE_SHEETS_CREDENTIALS="path/to/creds.json"
+export SHEET_ID="someidhere123"
