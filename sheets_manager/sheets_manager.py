@@ -158,9 +158,14 @@ class Sheets:
             )
             .execute()
         )
-        return result.get("values", [])
+        self.data = result.get("values", [])
+        return self
 
-    def write_data(self, data: List[list], data_range=None) -> dict:
+    def write_data(
+        self,
+        data: List[list] = None,
+        data_range: str = None,
+    ) -> dict:
         """
         Write data to the created spreadsheet object.
 
@@ -179,6 +184,7 @@ class Sheets:
         except: ValueError
             If no data range is provided
         """
+        _data = data or self.data
         response = (
             self.spreadsheet()
             .values()
@@ -186,13 +192,13 @@ class Sheets:
                 spreadsheetId=self.sheet_id,
                 valueInputOption="RAW",
                 range=self._set_data_range(data_range),
-                body=dict(values=data),
+                body=dict(values=_data),
             )
             .execute()
         )
         return response
 
-    def to_dict(self, data: List[list]) -> List[dict]:
+    def to_dict(self, data: List[list] = None) -> List[dict]:
         """
         Convert data extracted from a Google Sheet into a list of dicts.
 
@@ -203,10 +209,11 @@ class Sheets:
         return:
             The data parsed as a list of dicts.
         """
+        _data = data or self.data
         data_as_dict = []
         headers = data[0]
 
-        for row in data:
+        for row in _data:
             if row is not headers:
                 data_dict = {}
                 for i in range(0, len(headers)):
@@ -214,7 +221,7 @@ class Sheets:
                 data_as_dict.append(data_dict)
         return data_as_dict
 
-    def to_list(self, data: List[dict], header: bool = True) -> List[list]:
+    def to_list(self, data: List[dict] = None, header: bool = True) -> List[list]:
         """
         Convert list of dicts into the correct format to write to a sheet.
 
@@ -233,11 +240,13 @@ class Sheets:
             Data formatted to be written to
             a spreadsheet.
         """
+        _data = data or self.data
         data_as_list = []
         if header:
-            headers = list(data[0].keys())
+            headers = list(_data[0].keys())
             data_as_list.append(headers)
 
-        for row in data:
+        for row in _data:
             data_as_list.append(list(row.values()))
-        return data_as_list
+        self.data = data_as_list
+        return self

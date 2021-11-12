@@ -10,7 +10,7 @@ To use the `.env` file you have created, type `source .env` into your terminal.
 
 Variable                       | Meaning
 -------------------------------|----------------------------------------------
-SHEET_ID                 | Google Spreadsheet ID.
+SHEET_ID                  | Google Spreadsheet ID.
 GOOGLE_SHEETS_CREDENTIALS | Path to your credentials file, either Service Account credentials, or Desktop Application credentials.
 
 
@@ -46,11 +46,12 @@ spreadsheet = Sheets(
     scopes=["https://www.googleapis.com/auth/spreadsheets"],
     sheet_id="A73AscX-jJrcsRuiDkjher",
     credentials="~/credentials/credentials.json",
+    default_range="accounts",
 )
 
-spreadsheet.read_data(data_range="accounts")
+data = spreadsheet.read_data().to_dict()
 ```
-Once data has been extracted from the Spreadsheet, you may want to use the `to_dict()` method to convert the data into a list of dictionaries.
+
 
 ### Writing to a Spreadsheet
 When writing to a Spreadsheet, you must write data as a list of lists. For this, we have included a function, `to_list()`, which converts a list of dictionaries into a list of lists. With this function, there is an optional parameter of `header` which takes a `bool`. This parameter determines whether or not to write the data with the header row.
@@ -62,20 +63,19 @@ spreadsheet = Sheets(
     scopes=["https://www.googleapis.com/auth/spreadsheets"],
     sheet_id="A73AscX-jJrcsRuiDkjher",
     credentials="~/credentials/credentials.json",
+    default_range="employees"
 )
 
 data = [
-  {
-    "Name": "Fred",
-    "Age": 31,
-  },
-  {
-    "Name": "Julie",
-    "Age": 28,
-  },
+    {
+        "Name": "Fred",
+        "Age": 31,
+    },
+    {
+        "Name": "Julie",
+        "Age": 28,
+    },
 ]
 
-prepared = spreadsheet.to_list(data=data)
-
-spreadsheet.write_data(data=prepared, data_range="employees")
+resp = spreadsheet.to_list(data=data).write_data()
 ```
