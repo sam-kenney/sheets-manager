@@ -17,9 +17,14 @@ GOOGLE_SHEETS_CREDENTIALS | Path to your credentials file, either Service Accoun
 ## Creating an environment
 Create a virtual development environment by using the `virtualenv` Python library. You can install this by executing `pip3 install virtualenv`. 
 
-To create your environment, type `virtualenv {your-env}`. Once created, you must activate it by using `source {your-env}/bin/activate`. Once you are done developing, simply type `deactivate` in your terminal.
+To create your environment, type `virtualenv venv --prompt "(your-env) "`. Once created, you can activate it by using `source venv/bin/activate`. Once you are done developing, simply type `deactivate` in your terminal.
 
 ## Installation
+### Using the library
+*   Install this library by running `pip install git+ssh://github.com/mr-strawberry66/sheets-manager`. 
+*   Import it to your code by adding `from sheets_manager import Sheets` to your imports list.
+
+### Developing for this library
 *   Install the required Python libraries using `pip3 install -r requirements.txt`.
 *   If you are developing for this tool, install the Python libraries required by running `pip3 install -r dev-requirements.txt`.
 
