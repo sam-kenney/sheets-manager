@@ -212,7 +212,7 @@ class Sheets:
         """
         _data = data or self.data
         data_as_dict = []
-        headers = data[0]
+        headers = _data[0]
 
         for row in _data:
             if row is not headers:
