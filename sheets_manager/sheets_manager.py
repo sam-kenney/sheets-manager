@@ -214,16 +214,22 @@ class Sheets:
             The data parsed as a list of dicts.
         """
         _data = data or self.data
-        data_as_dict = []
-        headers = _data[0]
+        if _data and isinstance(_data, list):
+            headers = _data[0]
 
-        for row in _data:
-            if row is not headers:
-                data_dict = {}
-                for i in range(0, len(headers)):
-                    data_dict[headers[i]] = row[i] or None
-                data_as_dict.append(data_dict)
-        return data_as_dict
+            return [
+                {
+                    header: value if value else None
+                    for header, value in zip(
+                        headers,
+                        row,
+                    )
+                }
+                for row in _data
+                if row is not headers
+            ]
+        else:
+            raise ValueError("No data provided")
 
     def as_list(self, data: List[dict] = None, header: bool = True) -> List[list]:
         """
@@ -247,15 +253,16 @@ class Sheets:
             a spreadsheet.
         """
         _data = data or self.data
-        data_as_list = []
-        if header:
-            headers = list(_data[0].keys())
-            data_as_list.append(headers)
+        if _data and isinstance(_data, list):
+            self.data = (
+                [list(data[0].keys())] + [list(row.values()) for row in data]
+                if header
+                else [list(row.values()) for row in data]
+            )
 
-        for row in _data:
-            data_as_list.append(list(row.values()))
-        self.data = data_as_list
-        return self
+            return self
+        else:
+            raise ValueError("No data provided")
 
     @staticmethod
     def to_dict(data: List[list]) -> List[dict]:
@@ -269,19 +276,22 @@ class Sheets:
         return:
             The data parsed as a list of dicts.
         """
-        data_as_dict = []
         headers = data[0]
 
-        for row in data:
-            if row is not headers:
-                data_dict = {}
-                for i in range(0, len(headers)):
-                    data_dict[headers[i]] = row[i] or None
-                data_as_dict.append(data_dict)
-        return data_as_dict
+        return [
+            {
+                header: value if value else None
+                for header, value in zip(
+                    headers,
+                    row,
+                )
+            }
+            for row in data
+            if row is not headers
+        ]
 
     @staticmethod
-    def to_list(data: List[dict] = None, header: bool = True) -> List[list]:
+    def to_list(data: List[dict], header: bool = True) -> List[list]:
         """
         Convert list of dicts a list of lists.
 
@@ -300,11 +310,8 @@ class Sheets:
             Data formatted to be written to
             a spreadsheet.
         """
-        data_as_list = []
-        if header:
-            headers = list(data[0].keys())
-            data_as_list.append(headers)
-
-        for row in data:
-            data_as_list.append(list(row.values()))
-        return data_as_list
+        return (
+            [list(data[0].keys())] + [list(row.values()) for row in data]
+            if header
+            else [list(row.values()) for row in data]
+        )
