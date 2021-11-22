@@ -17,13 +17,13 @@ AS_DICT = [
 
 def test_to_dict():
     """Test the conversion of sheets-like data to a list of dicts."""
-    assert Sheets().to_dict(AS_LIST) == AS_DICT
+    assert Sheets.to_dict(AS_LIST) == AS_DICT
 
 
 def test_to_list():
     """Test the conversion of a list of dicts to a sheets-like data."""
-    assert Sheets().to_list(AS_DICT) == AS_LIST
-    assert Sheets().to_list(AS_DICT, False) == [AS_LIST[1], AS_LIST[2]]
+    assert Sheets.to_list(AS_DICT) == AS_LIST
+    assert Sheets.to_list(AS_DICT, False) == [AS_LIST[1], AS_LIST[2]]
 
 
 def test_set_data_range():

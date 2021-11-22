@@ -54,12 +54,12 @@ spreadsheet = Sheets(
     default_range="accounts",
 )
 
-data = spreadsheet.read_data().to_dict()
+data = spreadsheet.read_data().as_dict()
 ```
-
+If you are expecting jagged rows, you can write code to handle that in a fashion appropriate to the specific case, then use the `Sheets.to_dict(data)` method to convert it to a list of dictionaries once normalised.
 
 ### Writing to a Spreadsheet
-When writing to a Spreadsheet, you must write data as a list of lists. For this, we have included a function, `to_list()`, which converts a list of dictionaries into a list of lists. With this function, there is an optional parameter of `header` which takes a `bool`. This parameter determines whether or not to write the data with the header row.
+When writing to a Spreadsheet, you must write data as a list of lists. For this, we have included a function, `to_list()`, which converts a list of dictionaries into a list of lists. With this function, there is an optional parameter of `header` which takes a `bool`. This parameter determines whether or not to write the data with the header row. Additionally, there is an `as_list()` function that allows you to chain the `write_data()` method without having to pass in the transformed data.
 
 ```py
 from sheets_manager import Sheets
@@ -82,5 +82,5 @@ data = [
     },
 ]
 
-resp = spreadsheet.to_list(data=data).write_data()
+resp = spreadsheet.as_list(data=data).write_data()
 ```
