@@ -18,3 +18,11 @@ def format(session):
     """Format using black."""
     session.install("black")
     session.run("black", ".")
+
+
+@nox.session
+def test(session):
+    """Run tests."""
+    session.install("pytest")
+    session.install("-r", "requirements.txt")
+    session.run("pytest")

@@ -96,6 +96,7 @@ class Sheets:
         return credentials
 
     def _authenticate_as_service_account(self) -> str:
+        """Authenticate using service account credentials."""
         credentials = ServiceAccountCredentials.from_json_keyfile_name(
             self.credentials,
             self.scopes,
@@ -199,9 +200,11 @@ class Sheets:
         )
         return response
 
-    def to_dict(self, data: List[list] = None) -> List[dict]:
+    def as_dict(self, data: List[list] = None) -> List[dict]:
         """
         Convert data extracted from a Google Sheet into a list of dicts.
+
+        Allows for chaining of other methods.
 
         args:
             data: List[list]
@@ -222,9 +225,11 @@ class Sheets:
                 data_as_dict.append(data_dict)
         return data_as_dict
 
-    def to_list(self, data: List[dict] = None, header: bool = True) -> List[list]:
+    def as_list(self, data: List[dict] = None, header: bool = True) -> List[list]:
         """
         Convert list of dicts into the correct format to write to a sheet.
+
+        Allows for chaining of other methods.
 
         args:
             data: List[dict]
@@ -251,3 +256,55 @@ class Sheets:
             data_as_list.append(list(row.values()))
         self.data = data_as_list
         return self
+
+    @staticmethod
+    def to_dict(data: List[list]) -> List[dict]:
+        """
+        Convert a list of lists into a list of dicts.
+
+        args:
+            data: List[list]
+                The raw data extracted from Google Sheets.
+
+        return:
+            The data parsed as a list of dicts.
+        """
+        data_as_dict = []
+        headers = data[0]
+
+        for row in data:
+            if row is not headers:
+                data_dict = {}
+                for i in range(0, len(headers)):
+                    data_dict[headers[i]] = row[i] or None
+                data_as_dict.append(data_dict)
+        return data_as_dict
+
+    @staticmethod
+    def to_list(data: List[dict] = None, header: bool = True) -> List[list]:
+        """
+        Convert list of dicts a list of lists.
+
+        args:
+            data: List[dict]
+                A list of dictionaries to convert
+                into a list of lists to write.
+
+            header: bool
+                Optional parameter to include or
+                exclude the header row when
+                converting to sheets formatted
+                data. Defaults to True (include).
+
+        return: List[list]
+            Data formatted to be written to
+            a spreadsheet.
+        """
+        data_as_list = []
+        if header:
+            headers = list(data[0].keys())
+            data_as_list.append(headers)
+
+        for row in data:
+            data_as_list.append(list(row.values()))
+        return data_as_list
