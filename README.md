@@ -82,5 +82,23 @@ data = [
     },
 ]
 
-resp = spreadsheet.as_list(data=data).write_data()
+with_headers = spreadsheet.as_list(data=data).write_data()
+"""
+Output in Spreadsheet
+
+Name    Age
+Fred    31
+Julie   28
+"""
+
+
+without_headers = spreadsheet.as_list(
+    data=data, header=False
+).write_data()
+"""
+Output in Spreadsheet
+
+Fred    31
+Julie   28
+"""
 ```

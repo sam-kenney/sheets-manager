@@ -70,6 +70,44 @@ class Sheets:
         self.scopes = scopes
         self.token = token
         self.service_account = auth_as_service_account
+        self.data = None
+
+    def __repr__(self):
+        """Representation of the Class."""
+        return (
+            self.__class__.__qualname__
+            + f"(credentials={self.credentials}, "
+            + f"sheet_id={self.sheet_id}, "
+            + f"default_range={self.default_range}, "
+            + f"scopes={self.scopes}, "
+            + f"token={self.token}, "
+            + f"service_account={self.service_account}, "
+            + f"data={self.data})"
+        )
+
+    def __eq__(self, other):
+        """Comparison operator."""
+        if other.__class__ is self.__class__:
+            return (
+                self.credentials,
+                self.sheet_id,
+                self.default_range,
+                self.scopes,
+                self.token,
+                self.service_account,
+                self.data,
+            ) == (
+                other.credentials,
+                other.sheet_id,
+                other.default_range,
+                other.scopes,
+                other.token,
+                other.service_account,
+                other.data,
+            )
+        return NotImplemented
+
+    __hash__ = None
 
     def _authenticate_as_user(self) -> str:
         """Set or create credentials for operations on Google Sheets."""
@@ -134,7 +172,7 @@ class Sheets:
             raise ValueError("No data range provided")
         return _range
 
-    def read_data(self, data_range=None) -> List[list]:
+    def read_data(self, data_range=None):
         """
         Read data from the created spreadsheet object.
 
@@ -149,7 +187,7 @@ class Sheets:
             list.
 
         except: ValueError
-            If no data range is provided
+            If no data range is provided.
         """
         result = (
             self.spreadsheet()
@@ -184,7 +222,7 @@ class Sheets:
             and number of rows written.
 
         except: ValueError
-            If no data range is provided
+            If no data range is provided.
         """
         _data = data or self.data
         response = (
@@ -200,7 +238,11 @@ class Sheets:
         )
         return response
 
-    def as_dict(self, data: List[list] = None) -> List[dict]:
+    def as_dict(
+        self,
+        data: List[list] = None,
+        headers: List[str] = None,
+    ) -> List[dict]:
         """
         Convert data extracted from a Google Sheet into a list of dicts.
 
@@ -210,23 +252,29 @@ class Sheets:
             data: List[list]
                 The raw data extracted from Google Sheets.
 
+            headers: List[str]
+                An optional list of headers to pass in
+                to use as the keys for each dictionary.
+                If not passed in, the first row of data
+                will be used as the keys.
+
         return:
             The data parsed as a list of dicts.
         """
         _data = data or self.data
         if _data and isinstance(_data, list):
-            headers = _data[0]
+            header_row = headers or _data[0]
 
             return [
                 {
                     header: value if value else None
                     for header, value in zip(
-                        headers,
+                        header_row,
                         row,
                     )
                 }
                 for row in _data
-                if row is not headers
+                if row is not header_row
             ]
         else:
             raise ValueError("No data provided")
@@ -265,7 +313,10 @@ class Sheets:
             raise ValueError("No data provided")
 
     @staticmethod
-    def to_dict(data: List[list]) -> List[dict]:
+    def to_dict(
+        data: List[list],
+        headers: List[str] = None,
+    ) -> List[dict]:
         """
         Convert a list of lists into a list of dicts.
 
@@ -273,21 +324,27 @@ class Sheets:
             data: List[list]
                 The raw data extracted from Google Sheets.
 
+            headers: List[str]
+                An optional list of headers to pass in
+                to use as the keys for each dictionary.
+                If not passed in, the first row of data
+                will be used as the keys.
+
         return:
             The data parsed as a list of dicts.
         """
-        headers = data[0]
+        header_row = headers or data[0]
 
         return [
             {
                 header: value if value else None
                 for header, value in zip(
-                    headers,
+                    header_row,
                     row,
                 )
             }
             for row in data
-            if row is not headers
+            if row is not header_row
         ]
 
     @staticmethod
