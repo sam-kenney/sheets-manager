@@ -8,8 +8,8 @@ long_description = (here / "README.md").read_text(encoding="utf-8")
 
 setup(
     name="sheets_manager",
-    version="1.1",
-    description="Codebase for Louder's Transfers operations",
+    version="1.2.0",
+    description="Codebase for operating on Google Sheets",
     url="https://github.com/mr-strawberry66/sheets-manager",
     author="Sam Kenney",
     author_email="sam.kenney@me.com",
