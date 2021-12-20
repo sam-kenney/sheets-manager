@@ -1,6 +1,8 @@
 """Functions to utilise the Google Sheets client library."""
 import os
+from itertools import zip_longest
 from typing import List
+from warnings import warn
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -264,17 +266,22 @@ class Sheets:
         _data = data or self.data
         if _data and isinstance(_data, list):
             header_row = headers or _data[0]
+            if len(header_row) != len(_data[len(_data) - 1]):
+                warn(
+                    "Jagged rows are unsupported. Additional "
+                    + "columns will be populated with None values."
+                )
 
             return [
                 {
-                    header: value if value else None
-                    for header, value in zip(
+                    header: value
+                    for header, value in zip_longest(
                         header_row,
                         row,
                     )
                 }
                 for row in _data
-                if row is not header_row
+                if row != header_row
             ]
         else:
             raise ValueError("No data provided")
@@ -334,11 +341,16 @@ class Sheets:
             The data parsed as a list of dicts.
         """
         header_row = headers or data[0]
+        if len(header_row) != len(data[len(data) - 1]):
+            warn(
+                "Jagged rows are unsupported. Additional "
+                + "columns will be populated with None values."
+            )
 
         return [
             {
-                header: value if value else None
-                for header, value in zip(
+                header: value
+                for header, value in zip_longest(
                     header_row,
                     row,
                 )
