@@ -43,6 +43,8 @@ token | The name of the refresh token file. Defaults to `token.json`. We recomme
 default_range | A default range to read from or write to. If you are reading from this range, it MUST include the header row. This parameter defaults to None, and is overwritten by the optional `data_range` parameter found in the `read_data()` and `write_data()` methods. 
 auth_as_service_account | Allows you to either authentiate as a service account, or as a user. Defaults to service account.
 
+You can find more examples in the `examples` directory.
+
 ### Reading from a Spreadsheet
 ```py
 from sheets_manager import Sheets
