@@ -356,7 +356,7 @@ class Sheets:
                 )
             }
             for row in data
-            if row is not header_row
+            if row != header_row
         ]
 
     @staticmethod
