@@ -3,7 +3,7 @@
 This repository is used to manage Google Sheets.
 
 ## Credentials
-Make a copy of the `env_template` file and name it `.env`. You will need to provide a Spreadsheet ID, and a path to a desktop application [credentials file](https://developers.google.com/workspace/guides/create-credentials#create_a_oauth_client_id_credential) used to authenticate agains the Sheets API.
+Make a copy of the `env_template` file and name it `.env`. You will need to provide a Spreadsheet ID, and a path to a desktop application [credentials file](https://developers.google.com/workspace/guides/create-credentials#create_a_oauth_client_id_credential) used to authenticate agains the Sheets API. Alternatively, you may authenticate as a [Service Account](https://cloud.google.com/iam/docs/service-accounts) using a set of service account credentials from the [Google Cloud Platform](https://cloud.google.com/).
 
 To use the `.env` file you have created, type `source .env` into your terminal.
 
@@ -15,7 +15,7 @@ GOOGLE_SHEETS_CREDENTIALS | Path to your credentials file, either Service Accoun
 
 
 ## Creating an environment
-Create a virtual development environment by using the `virtualenv` Python library. You can install this by executing `pip3 install virtualenv`. 
+Create a virtual development environment by using the `virtualenv` Python library. You can install this by executing `pip install virtualenv`. 
 
 To create your environment, type `virtualenv venv --prompt "(your-env) "`. Once created, you can activate it by using `source venv/bin/activate`. Once you are done developing, simply type `deactivate` in your terminal.
 
@@ -25,8 +25,8 @@ To create your environment, type `virtualenv venv --prompt "(your-env) "`. Once 
 *   Import it to your code by adding `from sheets_manager import Sheets` to your imports list.
 
 ### Developing for this library
-*   Install the required Python libraries using `pip3 install -r requirements.txt`.
-*   If you are developing for this tool, install the Python libraries required by running `pip3 install -r dev-requirements.txt`.
+*   Install the required Python libraries using `pip install -r requirements.txt`.
+*   If you are developing for this tool, install the Python libraries required by running `pip install -r dev-requirements.txt`.
 
 *Please ensure to create your environment before you execute any of the installation commands*
 
